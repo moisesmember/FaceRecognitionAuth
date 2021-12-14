@@ -27,8 +27,8 @@ class DataBaseService {
 
     jsonFile = new File(_embPath);
 
-    if (jsonFile.existsSync()) { print('++++++++++++++++++++++++++++++++++++++++++++++++++++');
-      _db = json.decode(jsonFile.readAsStringSync()); print(_db);
+    if (jsonFile.existsSync()) {
+      _db = json.decode(jsonFile.readAsStringSync());
     }
   }
 
