@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:face_net_authentication/services/api/api.dart';
 
 class DataBaseService {
   // singleton boilerplate
@@ -12,6 +13,7 @@ class DataBaseService {
   }
   // singleton boilerplate
   DataBaseService._internal();
+  Api api = new Api();
 
   /// file that stores the data on filesystem
   File jsonFile;
@@ -26,17 +28,29 @@ class DataBaseService {
     String _embPath = tempDir.path + '/emb.json';
 
     jsonFile = new File(_embPath);
-
+//await loadDBNew();
     if (jsonFile.existsSync()) {
       _db = json.decode(jsonFile.readAsStringSync());
     }
   }
+
+  /*Future loadDBNew() async {
+    _db = await api.makeGetRequest('findAllCredencial');
+    if( _db != null ){
+      print('+===================================================+');
+      //print(json.decode(_db));
+      print('+===================================================+');
+    }
+  }*/
 
   /// [Name]: name of the new user
   /// [Data]: Face representation for Machine Learning model
   Future saveData(String user, String password, List modelData) async {
     String userAndPass = user + ':' + password;
     _db[userAndPass] = modelData;
+    var credencial = { userAndPass: modelData };
+    var body = '{"credencial": ${json.encode(credencial)}}';
+    await api.makePostRequest('insertCredencial', body); // To save in MongoDB by NodeJs
     jsonFile.writeAsStringSync(json.encode(_db));
   }
 
