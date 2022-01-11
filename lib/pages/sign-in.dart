@@ -95,7 +95,7 @@ class SignInState extends State<SignIn> {
 
               if (_saving) {
                 _saving = false;
-                _faceNetService.setCurrentPrediction(image, faceDetected);
+                _faceNetService.setCurrentPrediction(image, faceDetected); // Predição de Imagem
               }
             } else {
               setState(() {
@@ -120,7 +120,7 @@ class SignInState extends State<SignIn> {
         context: context,
         builder: (context) {
           return AlertDialog(
-            content: Text('No face detected!'),
+            content: Text('Perfil não encontrado!'),
           );
         },
       );

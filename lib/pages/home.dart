@@ -105,13 +105,13 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
-                    Image(image: AssetImage('assets/logo.png')),
+                    Image(image: AssetImage('assets/logoHam.png')),
                     Container(
                       width: MediaQuery.of(context).size.width * 0.8,
                       child: Column(
                         children: [
                           Text(
-                            "FACE RECOGNITION AUTHENTICATION",
+                            "CENTRO CIRÚRGICO DIGITAL",
                             style: TextStyle(
                                 fontSize: 25, fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,

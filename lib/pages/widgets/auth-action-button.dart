@@ -52,24 +52,24 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   Future _signIn(context) async {
     String password = _passwordTextEditingController.text;
 
-    if (this.predictedUser.password == password) {
+    //if (this.predictedUser.password == password) {
       Navigator.push(
           context,
           MaterialPageRoute(
               builder: (BuildContext context) => Profile(
-                    this.predictedUser.user,
-                    imagePath: _cameraService.imagePath,
+                    this.predictedUser.user,            // Passa o nome para a tela chamada
+                    imagePath: _cameraService.imagePath, // Parra a foto para a tela chamada
                   )));
-    } else {
+    /*} else {
       showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            content: Text('Wrong password!'),
+            content: Text('Senha incorreta!'),
           );
         },
       );
-    }
+    }*/
   }
 
   String _predictUser() {
@@ -87,9 +87,9 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           // onShot event (takes the image and predict output)
           bool faceDetected = await widget.onPressed();
 
-          if (faceDetected) {
-            if (widget.isLogin) {
-              var userAndPass = _predictUser();
+          if (faceDetected) {  // Face detectada e botão clicado
+            if (widget.isLogin) { // Está logada
+              var userAndPass = _predictUser(); // Prever usuário
               if (userAndPass != null) {
                 this.predictedUser = User.fromDB(userAndPass);
               }
@@ -125,7 +125,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'CAPTURE',
+              'CAPTURAR',
               style: TextStyle(color: Colors.white),
             ),
             SizedBox(
@@ -148,14 +148,14 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           widget.isLogin && predictedUser != null
               ? Container(
                   child: Text(
-                    'Welcome back, ' + predictedUser.user + '.',
+                    'Bem-vindo de volta, ' + predictedUser.user + '.',
                     style: TextStyle(fontSize: 20),
                   ),
                 )
               : widget.isLogin
                   ? Container(
                       child: Text(
-                      'User not found 😞',
+                      'Usuário não encontrado 😞',
                       style: TextStyle(fontSize: 20),
                     ))
                   : Container(),
@@ -165,17 +165,18 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                 !widget.isLogin
                     ? AppTextField(
                         controller: _userTextEditingController,
-                        labelText: "Your Name",
+                        labelText: "Seu nome",
                       )
                     : Container(),
                 SizedBox(height: 10),
-                widget.isLogin && predictedUser == null
+                /*widget.isLogin && predictedUser == null
                     ? Container()
                     : AppTextField(
                         controller: _passwordTextEditingController,
-                        labelText: "Password",
+                        labelText: "Senha",
                         isPassword: true,
                       ),
+                 */
                 SizedBox(height: 10),
                 Divider(),
                 SizedBox(height: 10),
@@ -183,7 +184,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                     ? AppButton(
                         text: 'LOGIN',
                         onPressed: () async {
-                          _signIn(context);
+                          _signIn(context); // Efetua a verificação do LOGIN
                         },
                         icon: Icon(
                           Icons.login,

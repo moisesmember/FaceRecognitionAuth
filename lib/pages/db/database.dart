@@ -28,28 +28,41 @@ class DataBaseService {
     String _embPath = tempDir.path + '/emb.json';
 
     jsonFile = new File(_embPath);
-//await loadDBNew();
+
     if (jsonFile.existsSync()) {
+      print(json.decode(jsonFile.readAsStringSync()));
+      print('+++++++++++++++++++++++++++++++++++++++++++++++++++++');
       _db = json.decode(jsonFile.readAsStringSync());
     }
+    //await loadDBNew();
   }
 
-  /*Future loadDBNew() async {
-    _db = await api.makeGetRequest('findAllCredencial');
+  Future loadDBNew() async {
+
+    //var dados = User.fromJson(await api.makeGetRequest('findAllCredencial'));
+    //_db = Map<String, dynamic>.from(Map.from(await api.makeGetRequest('findAllCredencial')));
+    var dados = await api.makeGetRequest('findAllCredencial');
+    print('+===================================================+');
+    print(dados);
+    print('+===================================================+');
+
+    /*_db = json.decode( await api.makeGetRequest('findAllCredencial') ) as Map<String, dynamic>;
     if( _db != null ){
       print('+===================================================+');
+      print(_db);
       //print(json.decode(_db));
       print('+===================================================+');
-    }
-  }*/
+    } */
+  }
 
   /// [Name]: name of the new user
   /// [Data]: Face representation for Machine Learning model
   Future saveData(String user, String password, List modelData) async {
     String userAndPass = user + ':' + password;
-    _db[userAndPass] = modelData;
-    var credencial = { userAndPass: modelData };
-    var body = '{"credencial": ${json.encode(credencial)}}';
+    _db[0][userAndPass] = modelData;
+    var body = '{"usuario": "${user}", "credencial": ${modelData}}';
+    print(body);
+    print('=====================================================');
     await api.makePostRequest('insertCredencial', body); // To save in MongoDB by NodeJs
     jsonFile.writeAsStringSync(json.encode(_db));
   }

@@ -8,7 +8,7 @@ class Api{
   final resultNotifier = ValueNotifier<RequestState>(RequestInitial());
 
   Future<dynamic> makeGetRequest(String router) async {
-  //Future<String> makeGetRequest() async {
+    //Future<dynamic> makeGetRequest(String router) async {
       resultNotifier.value = RequestLoadInProgress();
       //final url = Uri.parse('$urlPrefix/posts');
       final url = Uri.parse('$urlPrefix/$router');
@@ -17,13 +17,13 @@ class Api{
       print('============================================');
       //print('Headers: ${response.headers}');
       print('============================================');
-      //print('Body: ${response.body}');
+      print('Body: ${response.body}');
       print('============================================');
       return _handleResponse(response);
       //return response;
     }
 
-    Future<dynamic> makePostRequest(String router, String body) async {
+  Future<dynamic> makePostRequest(String router, String body) async {
       resultNotifier.value = RequestLoadInProgress();
       final url = Uri.parse('$urlPrefix/$router');
       final headers = {"Content-type": "application/json"};
@@ -73,13 +73,14 @@ class Api{
         resultNotifier.value = RequestLoadSuccess(response.body);
       }
     }*/
-    dynamic _handleResponse(Response response){
+  dynamic _handleResponse(Response response){
       if (response.statusCode >= 400) {
         return  [{}] ;
       } else {
         return json.decode( response.body );
       }
     }
+
 }
 
 class RequestState {

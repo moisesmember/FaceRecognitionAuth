@@ -138,7 +138,6 @@ class FaceNetService {
   /// [predictedData]: Array that represents the face by the MobileFaceNet model
   String _searchResult(List predictedData) {
     Map<String, dynamic> data = _dataBaseService.db;
-
     /// if no faces saved
     if (data?.length == 0) return null;
     double minDist = 999;
