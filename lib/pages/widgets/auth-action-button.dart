@@ -193,7 +193,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                       )
                     : !widget.isLogin
                         ? AppButton(
-                            text: 'SIGN UP',
+                            text: 'CADASTRAR',
                             onPressed: () async {
                               await _signUp(context);
                             },

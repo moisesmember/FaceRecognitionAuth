@@ -136,7 +136,7 @@ class FaceNetService {
 
   /// searchs the result in the DDBB (this function should be performed by Backend)
   /// [predictedData]: Array that represents the face by the MobileFaceNet model
-  String _searchResult(List predictedData) {
+  /*String _searchResult(List predictedData) {
     Map<String, dynamic> data = _dataBaseService.db;
     /// if no faces saved
     if (data?.length == 0) return null;
@@ -150,6 +150,41 @@ class FaceNetService {
       if (currDist <= threshold && currDist < minDist) {
         minDist = currDist;
         predRes = label;
+      }
+    }
+    return predRes;
+  }*/
+
+  String _searchResult(List predictedData) {
+    Map<String, dynamic> data = _dataBaseService.db;
+    /// if no faces saved
+    if (data?.length == 0) return null;
+    double minDist = 999;
+    double currDist = 0.0;
+    String predRes;
+
+    /// search the closest result 👓
+    /*for (String label in data.keys) {
+      print('****************** Função SEARCH RESULT *****************');
+      //print();
+      print('*********************************************************');
+      print(data[label]);
+      currDist = _euclideanDistance(data[label], predictedData);
+      if (currDist <= threshold && currDist < minDist) {
+        minDist = currDist;
+        predRes = label;
+      }
+    }*/
+    //print(data.length);
+    for(var x = 0; x < data.length; x++){
+      print('****************** Função SEARCH RESULT *****************');
+      print(data['imagem']);
+      print('*********************************************************');
+      currDist = _euclideanDistance(data['imagem'], predictedData);
+      if (currDist <= threshold && currDist < minDist) {
+        print('Distância mínima: ${currDist} - Usuário: ${data['usuario']}');
+        minDist = currDist;
+        predRes = data['usuario'];
       }
     }
     return predRes;

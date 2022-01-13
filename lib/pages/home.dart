@@ -53,6 +53,10 @@ class _MyHomePageState extends State<MyHomePage> {
     _setLoading(false);
   }
 
+  Future<Null> loadDB() async{
+    await _dataBaseService.loadDB();
+  }
+
   // shows or hides the circular progress indicator
   _setLoading(bool value) {
     setState(() {
@@ -133,6 +137,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       children: [
                         InkWell(
                           onTap: () { // Chama função SIGN IN
+                            /*setState(() {
+                              loadDB();
+                            });*/
+                            loadDB();
                             Navigator.push(
                               context,
                               MaterialPageRoute(
