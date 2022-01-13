@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:face_net_authentication/services/api/api.dart';
-import 'package:face_net_authentication/pages/models/user.model.dart';
 
 class DataBaseService {
   // singleton boilerplate
@@ -15,7 +14,6 @@ class DataBaseService {
   // singleton boilerplate
   DataBaseService._internal();
   Api api = new Api();
-  User usu = new User();
 
   /// file that stores the data on filesystem
   File jsonFile;
@@ -41,13 +39,13 @@ class DataBaseService {
   Future loadDB() async {
     var dados = await api.makeGetRequest('findAllCredencial');
     print('+===================================================+');
-    //print(User.fromJson(dados[0]));
-    //_db = User.fromJson(dados[0]) as Map<String, dynamic>;
     print(dados.isEmpty);
     if( !dados.isEmpty ){
-      print(dados[0].length);
-      print(dados[0]);
-      _db = dados[0];
+      print('----------------------------------------');
+      dados.forEach((element) => print(element['usuario']) );
+      // Carrega Map<String, dynamic>
+      dados.forEach((element) => _db[element['usuario']] = element['imagem'] );
+      //print(_db);
     }
     print('+===================================================+');
   }

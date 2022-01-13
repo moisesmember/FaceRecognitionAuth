@@ -164,27 +164,15 @@ class FaceNetService {
     String predRes;
 
     /// search the closest result 👓
-    /*for (String label in data.keys) {
+    for (String label in data.keys) {
       print('****************** Função SEARCH RESULT *****************');
-      //print();
+      print(label);
       print('*********************************************************');
       print(data[label]);
       currDist = _euclideanDistance(data[label], predictedData);
       if (currDist <= threshold && currDist < minDist) {
         minDist = currDist;
         predRes = label;
-      }
-    }*/
-    //print(data.length);
-    for(var x = 0; x < data.length; x++){
-      print('****************** Função SEARCH RESULT *****************');
-      print(data['imagem']);
-      print('*********************************************************');
-      currDist = _euclideanDistance(data['imagem'], predictedData);
-      if (currDist <= threshold && currDist < minDist) {
-        print('Distância mínima: ${currDist} - Usuário: ${data['usuario']}');
-        minDist = currDist;
-        predRes = data['usuario'];
       }
     }
     return predRes;

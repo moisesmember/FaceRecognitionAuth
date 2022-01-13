@@ -124,7 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             height: 20,
                           ),
                           Text(
-                            "Demo application that uses Flutter and tensorflow to implement authentication with facial recognition",
+                            "v1.0.0",
                             style: TextStyle(
                               fontSize: 16,
                             ),
@@ -215,7 +215,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'SIGN UP',
+                                  'CADASTRAR',
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 SizedBox(
@@ -233,7 +233,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             thickness: 2,
                           ),
                         ),
-                        InkWell(
+                        /*InkWell(
                           onTap: _launchURL, // Chama função do login com o GIT
                           child: Container(
                             decoration: BoxDecoration(
@@ -268,7 +268,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               ],
                             ),
                           ),
-                        ),
+                        ),*/
                       ],
                     )
                   ],

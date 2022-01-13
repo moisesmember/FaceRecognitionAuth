@@ -125,7 +125,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'CAPTURAR',
+              'CAPTURAR IMAGEM',
               style: TextStyle(color: Colors.white),
             ),
             SizedBox(
