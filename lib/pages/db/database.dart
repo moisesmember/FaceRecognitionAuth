@@ -34,7 +34,7 @@ class DataBaseService {
       print('+++++++++++++++++++++++++++++++++++++++++++++++++++++');
       _db = json.decode(jsonFile.readAsStringSync());
     }
-  }*/
+  }
 
   Future loadDB() async {
     var dados = await api.makeGetRequest('findAllCredencial');
@@ -45,6 +45,20 @@ class DataBaseService {
       dados.forEach((element) => print(element['usuario']) );
       // Carrega Map<String, dynamic>
       dados.forEach((element) => _db[element['usuario']] = element['imagem'] );
+      //print(_db);
+    }
+    print('+===================================================+');
+  } */
+
+  Future loadDB() async {
+    var dados = await api.makeGetRequest('findAllCredencial');
+    print('+===================================================+');
+    print(dados.isEmpty);
+    if( !dados.isEmpty ){
+      print('----------------------------------------');
+      dados.forEach((element) => print(element['NOME']) );
+      // Carrega Map<String, dynamic>
+      dados.forEach((element) => _db[element['NOME']] = element['IMAGEM']);
       //print(_db);
     }
     print('+===================================================+');

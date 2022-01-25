@@ -95,6 +95,67 @@ class _AuthActionButtonState extends State<AuthActionButton> {
               }
             }
             PersistentBottomSheetController bottomSheetController =
+            Scaffold.of(context)
+                .showBottomSheet((context) => signSheet(context));
+
+            bottomSheetController.closed.whenComplete(() => widget.reload());
+          }
+        } catch (e) {
+          // If an error occurs, log the error to the console.
+          print(e);
+        }
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Color(0xFF0F0BDB),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              color: Colors.blue.withOpacity(0.1),
+              blurRadius: 1,
+              offset: Offset(0, 2),
+            ),
+          ],
+        ),
+        alignment: Alignment.center,
+        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+        width: MediaQuery.of(context).size.width * 0.8,
+        height: 60,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'CAPTURAR IMAGEM',
+              style: TextStyle(color: Colors.white),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Icon(Icons.camera_alt, color: Colors.white)
+          ],
+        ),
+      ),
+    );
+  }
+
+  /*@override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () async {
+        try {
+          // Ensure that the camera is initialized.
+          await widget._initializeControllerFuture;
+          // onShot event (takes the image and predict output)
+          bool faceDetected = await widget.onPressed();
+
+          if (faceDetected) {  // Face detectada e botão clicado
+            if (widget.isLogin) { // Está logada
+              var userAndPass = _predictUser(); // Prever usuário
+              if (userAndPass != null) {
+                this.predictedUser = User.fromDB(userAndPass);
+              }
+            }
+            PersistentBottomSheetController bottomSheetController =
                 Scaffold.of(context)
                     .showBottomSheet((context) => signSheet(context));
 
@@ -136,7 +197,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
         ),
       ),
     );
-  }
+  } */
 
   signSheet(context) {
     return Container(

@@ -168,8 +168,10 @@ class FaceNetService {
       print('****************** Função SEARCH RESULT *****************');
       print(label);
       print('*********************************************************');
+      //print(data[label]);
       print(data[label]);
-      currDist = _euclideanDistance(data[label], predictedData);
+print(convertStringToList(data[label]));
+      currDist = _euclideanDistance(convertStringToList(data[label]), predictedData);
       if (currDist <= threshold && currDist < minDist) {
         minDist = currDist;
         predRes = label;
@@ -192,5 +194,15 @@ class FaceNetService {
 
   void setPredictedData(value) {
     this._predictedData = value;
+  }
+
+  List<dynamic> convertStringToList( String valueString ){
+    List<dynamic> newValue = [];
+    valueString = valueString.replaceAll('[', ' ');
+    valueString = valueString.replaceAll(']', ' ');
+    valueString.split(',').map((String number) => newValue.add( double.parse(number))).toList();
+    //print(valueString);
+    //print(newValue);
+    return newValue;
   }
 }
