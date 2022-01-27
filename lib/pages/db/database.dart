@@ -35,7 +35,7 @@ class DataBaseService {
       _db = json.decode(jsonFile.readAsStringSync());
     }
   }
-
+ // MOngoDB
   Future loadDB() async {
     var dados = await api.makeGetRequest('findAllCredencial');
     print('+===================================================+');
@@ -48,8 +48,8 @@ class DataBaseService {
       //print(_db);
     }
     print('+===================================================+');
-  } */
-
+  }
+  // Oracle
   Future loadDB() async {
     var dados = await api.makeGetRequest('findAllCredencial');
     print('+===================================================+');
@@ -63,6 +63,30 @@ class DataBaseService {
     }
     print('+===================================================+');
   }
+*/
+
+  Future valideLogin(List predictedData) async{
+    var body = '{"imagem": ${predictedData}}';
+    var result = await api.makePostRequest('verificarLogin', body);
+    /*return api.makePostRequest('verificarLogin', body).then((result){
+      return Future.value(result[0]);
+    });*/
+    return result;
+
+  }
+  /*Future valideLogin(List predictedData) async{
+    var user = "";
+    var body = '{"imagem": ${predictedData}}';
+    var result = await api.makePostRequest('verificarLogin', body);
+    if( !result.isEmpty ){
+      print('|||||||||||||||||||||||||||||||||||||||||||||||||||||||||');
+      print(result);
+      print(result[0]['USUARIO']);
+      print('|||||||||||||||||||||||||||||||||||||||||||||||||||||||||');
+      user = result[0]['USUARIO'];
+    }
+    return result[0];
+  }*/
 
   /// [Name]: name of the new user
   /// [Data]: Face representation for Machine Learning model

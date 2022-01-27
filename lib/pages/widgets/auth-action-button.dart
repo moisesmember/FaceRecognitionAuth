@@ -7,6 +7,7 @@ import 'package:face_net_authentication/pages/widgets/app_button.dart';
 import 'package:face_net_authentication/services/camera.service.dart';
 import 'package:face_net_authentication/services/facenet.service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import '../home.dart';
 import 'app_text_field.dart';
 
@@ -72,15 +73,18 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     }*/
   }
 
-  String _predictUser() {
-    String userAndPass = _faceNetService.predict();
+  Future<String> _predictUser() async{
+    String userAndPass = await _faceNetService.predict();
+    print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
+    print(userAndPass);
+    print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
     return userAndPass ?? null;
   }
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () async {
+      onTap: () async{
         try {
           // Ensure that the camera is initialized.
           await widget._initializeControllerFuture;
@@ -89,11 +93,16 @@ class _AuthActionButtonState extends State<AuthActionButton> {
 
           if (faceDetected) {  // Face detectada e botão clicado
             if (widget.isLogin) { // Está logada
-              var userAndPass = _predictUser(); // Prever usuário
+              var userAndPass = await _predictUser(); // Prever usuário
               if (userAndPass != null) {
-                this.predictedUser = User.fromDB(userAndPass);
+                print('<<<<<<<<<<<<<<<<<<< CHEGOU AQUI >>>>>>>>>>>>>>>>>>>');
+                print(userAndPass);
+                this.predictedUser = User.fromDB(userAndPass, '', []);
+                print('USUARIO: ${this.predictedUser.user}');
+                print('SENHA: ${this.predictedUser.password}');
               }
             }
+
             PersistentBottomSheetController bottomSheetController =
             Scaffold.of(context)
                 .showBottomSheet((context) => signSheet(context));
@@ -200,6 +209,7 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   } */
 
   signSheet(context) {
+    print("ºººººººººººººº CHEGOU NO SIGN SHEET ºººººººººººººººººººº");
     return Container(
       padding: EdgeInsets.all(20),
       child: Column(

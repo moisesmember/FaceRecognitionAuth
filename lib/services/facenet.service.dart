@@ -74,9 +74,14 @@ class FaceNetService {
   }
 
   /// takes the predicted data previously saved and do inference
-  String predict() {
+  Future<String> predict() async{
+    print("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
+    print(await _searchResult(this._predictedData));
+    print("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
+    var search = await _searchResult(this._predictedData);
+
     /// search closer user prediction if exists
-    return _searchResult(this._predictedData);
+    return search.toString();
   }
 
   /// _preProess: crops the image to be more easy
@@ -136,7 +141,33 @@ class FaceNetService {
 
   /// searchs the result in the DDBB (this function should be performed by Backend)
   /// [predictedData]: Array that represents the face by the MobileFaceNet model
-  /*String _searchResult(List predictedData) {
+  Future<String> _searchResult(List predictedData) async{
+
+    var result = await _dataBaseService.valideLogin(predictedData) ;
+    print('****************** Função SEARCH RESULT *****************');
+    print(result);
+    print(result[0]['USUARIO']);
+    print('*********************************************************');
+    return result[0]['USUARIO'];
+    //return returnResult().toString();
+    /*_dataBaseService.valideLogin(predictedData).then((Map<String, dynamic> result){
+      print('****************** Função SEARCH RESULT *****************');
+      print(result['USUARIO']);
+      print('*********************************************************');
+      label = result['USUARIO'];
+    });
+    return label;*/
+  }
+
+  Future<Null> returnResult() async{
+    Map<String, dynamic> result = await _dataBaseService.valideLogin(predictedData);
+    return result['USUARIO'];
+  }
+
+  /*
+  /// searchs the result in the DDBB (this function should be performed by Backend)
+  /// [predictedData]: Array that represents the face by the MobileFaceNet model
+  String _searchResult(List predictedData) {
     Map<String, dynamic> data = _dataBaseService.db;
     /// if no faces saved
     if (data?.length == 0) return null;
@@ -153,7 +184,7 @@ class FaceNetService {
       }
     }
     return predRes;
-  }*/
+  }
 
   String _searchResult(List predictedData) {
     Map<String, dynamic> data = _dataBaseService.db;
@@ -170,7 +201,7 @@ class FaceNetService {
       print('*********************************************************');
       //print(data[label]);
       print(data[label]);
-print(convertStringToList(data[label]));
+
       currDist = _euclideanDistance(convertStringToList(data[label]), predictedData);
       if (currDist <= threshold && currDist < minDist) {
         minDist = currDist;
@@ -192,10 +223,7 @@ print(convertStringToList(data[label]));
     return sqrt(sum);
   }
 
-  void setPredictedData(value) {
-    this._predictedData = value;
-  }
-
+  // To convert String to List<dynamic>
   List<dynamic> convertStringToList( String valueString ){
     List<dynamic> newValue = [];
     valueString = valueString.replaceAll('[', ' ');
@@ -205,4 +233,9 @@ print(convertStringToList(data[label]));
     //print(newValue);
     return newValue;
   }
+*/
+  void setPredictedData(value) {
+    this._predictedData = value;
+  }
+
 }
