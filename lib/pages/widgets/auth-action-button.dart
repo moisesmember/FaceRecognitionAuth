@@ -93,7 +93,9 @@ class _AuthActionButtonState extends State<AuthActionButton> {
 
           if (faceDetected) {  // Face detectada e botão clicado
             if (widget.isLogin) { // Está logada
+
               var userAndPass = await _predictUser(); // Prever usuário
+print(' -------------------- CHAMOU A FUNÇÃO _PREDICTUSER ----------------------------------');
               if (userAndPass != null) {
                 print('<<<<<<<<<<<<<<<<<<< CHEGOU AQUI >>>>>>>>>>>>>>>>>>>');
                 print(userAndPass);
@@ -101,13 +103,23 @@ class _AuthActionButtonState extends State<AuthActionButton> {
                 print('USUARIO: ${this.predictedUser.user}');
                 print('SENHA: ${this.predictedUser.password}');
               }
+              print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+              print(this.mounted);
+print(context);
+              print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+              if(!this.mounted) return;
+              if(this.mounted) {
+                setState(() {
+                    PersistentBottomSheetController bottomSheetController =
+                    Scaffold.of(context)
+                        .showBottomSheet((context) => signSheet(context));
+                    print(
+                        ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< PASSOU SCAFFOLD >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
+                    bottomSheetController.closed.whenComplete(() =>
+                        widget.reload());
+                });
+              }
             }
-
-            PersistentBottomSheetController bottomSheetController =
-            Scaffold.of(context)
-                .showBottomSheet((context) => signSheet(context));
-
-            bottomSheetController.closed.whenComplete(() => widget.reload());
           }
         } catch (e) {
           // If an error occurs, log the error to the console.

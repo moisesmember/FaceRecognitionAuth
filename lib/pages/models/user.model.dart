@@ -8,7 +8,7 @@ class User {
   User({this.user, this.password, this.imagem});
  // User({@required this.user, @required this.password, this.imagem});
 
-  static User fromDB(String dbuser, String password, List<double> imagem) {
+  static User fromDB(String dbuser, String password, List<double> imagem){
     //return new User(user: dbuser.split(':')[0], password: dbuser.split(':')[1]);
     return new User(user: dbuser, password: password, imagem: imagem);
   }
