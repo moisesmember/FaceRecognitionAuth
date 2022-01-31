@@ -149,14 +149,6 @@ class FaceNetService {
     print(result[0]['USUARIO']);
     print('*********************************************************');
     return result[0]['USUARIO'];
-    //return returnResult().toString();
-    /*_dataBaseService.valideLogin(predictedData).then((Map<String, dynamic> result){
-      print('****************** Função SEARCH RESULT *****************');
-      print(result['USUARIO']);
-      print('*********************************************************');
-      label = result['USUARIO'];
-    });
-    return label;*/
   }
 
   Future<Null> returnResult() async{
@@ -164,76 +156,6 @@ class FaceNetService {
     return result['USUARIO'];
   }
 
-  /*
-  /// searchs the result in the DDBB (this function should be performed by Backend)
-  /// [predictedData]: Array that represents the face by the MobileFaceNet model
-  String _searchResult(List predictedData) {
-    Map<String, dynamic> data = _dataBaseService.db;
-    /// if no faces saved
-    if (data?.length == 0) return null;
-    double minDist = 999;
-    double currDist = 0.0;
-    String predRes;
-
-    /// search the closest result 👓
-    for (String label in data.keys) {
-      currDist = _euclideanDistance(data[label], predictedData);
-      if (currDist <= threshold && currDist < minDist) {
-        minDist = currDist;
-        predRes = label;
-      }
-    }
-    return predRes;
-  }
-
-  String _searchResult(List predictedData) {
-    Map<String, dynamic> data = _dataBaseService.db;
-    /// if no faces saved
-    if (data?.length == 0) return null;
-    double minDist = 999;
-    double currDist = 0.0;
-    String predRes;
-
-    /// search the closest result 👓
-    for (String label in data.keys) {
-      print('****************** Função SEARCH RESULT *****************');
-      print(label);
-      print('*********************************************************');
-      //print(data[label]);
-      print(data[label]);
-
-      currDist = _euclideanDistance(convertStringToList(data[label]), predictedData);
-      if (currDist <= threshold && currDist < minDist) {
-        minDist = currDist;
-        predRes = label;
-      }
-    }
-    return predRes;
-  }
-
-  /// Adds the power of the difference between each point
-  /// then computes the sqrt of the result 📐
-  double _euclideanDistance(List e1, List e2) {
-    if (e1 == null || e2 == null) throw Exception("Null argument");
-
-    double sum = 0.0;
-    for (int i = 0; i < e1.length; i++) {
-      sum += pow((e1[i] - e2[i]), 2);
-    }
-    return sqrt(sum);
-  }
-
-  // To convert String to List<dynamic>
-  List<dynamic> convertStringToList( String valueString ){
-    List<dynamic> newValue = [];
-    valueString = valueString.replaceAll('[', ' ');
-    valueString = valueString.replaceAll(']', ' ');
-    valueString.split(',').map((String number) => newValue.add( double.parse(number))).toList();
-    //print(valueString);
-    //print(newValue);
-    return newValue;
-  }
-*/
   void setPredictedData(value) {
     this._predictedData = value;
   }

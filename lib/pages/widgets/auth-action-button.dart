@@ -82,34 +82,59 @@ class _AuthActionButtonState extends State<AuthActionButton> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async{
-        try {
-          // Ensure that the camera is initialized.
-          await widget._initializeControllerFuture;
-          // onShot event (takes the image and predict output)
-          bool faceDetected = await widget.onPressed();
+  Widget build(BuildContext context){
+    return new FutureBuilder(
+      future: _faceNetService.predict(), // Chama a função de predição
+      initialData: null,
+      builder: (BuildContext context, AsyncSnapshot<String> user){
+          return InkWell(
+            onTap: () async {
+              try {
+                // Ensure that the camera is initialized.
+                await widget._initializeControllerFuture;
+                // onShot event (takes the image and predict output)
+                bool faceDetected = await widget.onPressed();
+print('CHEGUEI NO FACE DETECTED: ${faceDetected}');
+                if (faceDetected) { // Face detectada e botão clicado
+                  if (widget.isLogin) { // Está logada
 
-          if (faceDetected) {  // Face detectada e botão clicado
-            if (widget.isLogin) { // Está logada
+                    //var userAndPass = await _predictUser(); // Prever usuário
+                    print(
+                        ' -------------------- CHAMOU A FUNÇÃO _PREDICTUSER ----------------------------------');
+                    print('POSSUI ERRO NO FUTURE BUILDER?: ${user.hasError}');
+                    print('POSSUI DADOS NO FUTURE BUILDER?: ${user.hasData}');
+                    print('ESTADO DA REQUISIÇÃO: ${user.connectionState}');
+                    print(user.data);
 
-              var userAndPass = await _predictUser(); // Prever usuário
-print(' -------------------- CHAMOU A FUNÇÃO _PREDICTUSER ----------------------------------');
-              if (userAndPass != null) {
-                print('<<<<<<<<<<<<<<<<<<< CHEGOU AQUI >>>>>>>>>>>>>>>>>>>');
-                print(userAndPass);
-                this.predictedUser = User.fromDB(userAndPass, '', []);
-                print('USUARIO: ${this.predictedUser.user}');
-                print('SENHA: ${this.predictedUser.password}');
-              }
-              print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-              print(this.mounted);
-print(context);
-              print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-              if(!this.mounted) return;
-              if(this.mounted) {
-                setState(() {
+                    if (user.hasData) {
+                      if (user.data != "") {
+                        print(
+                            '<<<<<<<<<<<<<<<<<<< CHEGOU AQUI >>>>>>>>>>>>>>>>>>>');
+                        print(user.data);
+                        this.predictedUser = User.fromDB(user.data, '', []);
+                        print('USUARIO: ${this.predictedUser.user}');
+                        print('SENHA: ${this.predictedUser.password}');
+                      } else {
+                        this.predictedUser = null;
+                      }
+                    } else {
+                      // Não possui data
+                      this.predictedUser = null;
+                    }
+
+                    if (user.hasError) {
+                      this.predictedUser = null;
+                    }
+                    print(
+                        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+                    print(this.mounted);
+                    print(context);
+                    print(
+                        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+                  }
+                    //if(!this.mounted) return;
+                    //if(this.mounted) {
+                    //  setState(() {
                     PersistentBottomSheetController bottomSheetController =
                     Scaffold.of(context)
                         .showBottomSheet((context) => signSheet(context));
@@ -117,108 +142,52 @@ print(context);
                         ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< PASSOU SCAFFOLD >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
                     bottomSheetController.closed.whenComplete(() =>
                         widget.reload());
-                });
+                    //  });
+                    //}
+
+                }
+              } catch (e) {
+                // If an error occurs, log the error to the console.
+                print(e);
               }
-            }
-          }
-        } catch (e) {
-          // If an error occurs, log the error to the console.
-          print(e);
-        }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Color(0xFF0F0BDB),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Colors.blue.withOpacity(0.1),
+                    blurRadius: 1,
+                    offset: Offset(0, 2),
+                  ),
+                ],
+              ),
+              alignment: Alignment.center,
+              padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+              width: MediaQuery
+                  .of(context)
+                  .size
+                  .width * 0.8,
+              height: 60,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'CAPTURAR IMAGEM',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Icon(Icons.camera_alt, color: Colors.white)
+                ],
+              ),
+            ),
+          );
       },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Color(0xFF0F0BDB),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.blue.withOpacity(0.1),
-              blurRadius: 1,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'CAPTURAR IMAGEM',
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Icon(Icons.camera_alt, color: Colors.white)
-          ],
-        ),
-      ),
     );
   }
-
-  /*@override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () async {
-        try {
-          // Ensure that the camera is initialized.
-          await widget._initializeControllerFuture;
-          // onShot event (takes the image and predict output)
-          bool faceDetected = await widget.onPressed();
-
-          if (faceDetected) {  // Face detectada e botão clicado
-            if (widget.isLogin) { // Está logada
-              var userAndPass = _predictUser(); // Prever usuário
-              if (userAndPass != null) {
-                this.predictedUser = User.fromDB(userAndPass);
-              }
-            }
-            PersistentBottomSheetController bottomSheetController =
-                Scaffold.of(context)
-                    .showBottomSheet((context) => signSheet(context));
-
-            bottomSheetController.closed.whenComplete(() => widget.reload());
-          }
-        } catch (e) {
-          // If an error occurs, log the error to the console.
-          print(e);
-        }
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: Color(0xFF0F0BDB),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.blue.withOpacity(0.1),
-              blurRadius: 1,
-              offset: Offset(0, 2),
-            ),
-          ],
-        ),
-        alignment: Alignment.center,
-        padding: EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-        width: MediaQuery.of(context).size.width * 0.8,
-        height: 60,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'CAPTURAR IMAGEM',
-              style: TextStyle(color: Colors.white),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Icon(Icons.camera_alt, color: Colors.white)
-          ],
-        ),
-      ),
-    );
-  } */
 
   signSheet(context) {
     print("ºººººººººººººº CHEGOU NO SIGN SHEET ºººººººººººººººººººº");
