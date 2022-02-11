@@ -8,11 +8,11 @@ class Api{
   final resultNotifier = ValueNotifier<RequestState>(RequestInitial());
 
   Future<dynamic> makeGetRequest(String router) async {
-    //Future<dynamic> makeGetRequest(String router) async {
       resultNotifier.value = RequestLoadInProgress();
-      //final url = Uri.parse('$urlPrefix/posts');
+      final headers = {"Content-type": "application/json",
+                       "Authorization": "bearer eyJ0eXAiOwiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5MTYzOThhNi0xMjA4LTQ0ODYtYTBjMC0xYTFlZwmJlZGNhMTUiLCJqdGkiOiJjMWE1MDZkMzZhYTc4YmE2NDM0NGY3NzNkYWMyNzIwMTAxNzBmZjdlNTVhZjFiZWZlZWRmZDM5NGRlZDlkYTQzNzVlMjE2ODFhM2I5ZjIzMiIsImlhdCI6MTU5OTY5MjkwMiwibmJmIjoxNTk5NjkyOTAyLCJleHAiOjE2MzEywMjg5MDIsInN1wYiI6IjQiLCJzY29wZXMiOltdfQ.rN1LkEKusr8hQEooQ4PnnTjyavAG0_4br9Ypg_M4aPJ5tuB_8wakeK1DiMHeieoefwWB52jzKsWndxJVd-w19Mj57-H4VymLMFhvj8nhlTBATfhYTc0UZmI0xOo0TFbE45gE-31UKcMCw9zVLqTTZXC2IpJNSdEVEyF2GxfwPPIQRFlOWAXaOemfmMhIuInhj4W8BKSonlGJNVqumV9mXWco6grzs8rBanuVL_phwNDbfEjockBt1HQrhCo-djfJOv66drwnzHt2L-e_PZ-9dWBiawn82VOJstWk-X-RgS1I0jPq-CSYqWvkGg2MFcmzoDoEqlGAyfsbrTJkOSOVf86leN12Lk25iCiqylY5h9dvHRLs3MvV0sUicJvcSWjFcm0QdHDlzvXxTCCcDiV_cakifksePEwY3WuFsRHLIXIM64bT2EuBmF61jQ8F2I1Sf6mxPCpn5VnKi8lB_kCmdjgBM9QTV5it2ABj_7chUq0NAYtPp2AvCEP7oucpHDqmP4sczMkdFnqbHrjZvjuvZCKzIGtQfuNtx2qoK7F5zLDjnyyLZQjBxEvOK4epCmn_HGom2gnMhxoHRTUWdiT8jcjpLEYmYCB9hO2yHdvMNytpKfaL6LE30xc-BaAbklg7Sc-gkBiVJOYHpwV7t4Freij1Rj4w-nR6NycFZ7MUf6D40rx4"};
       final url = Uri.parse('$urlPrefix/$router');
-      Response response = await get(url);
+      Response response = await get(url, headers: headers);
       print('Status code: ${response.statusCode}');
       print('============================================');
       //print('Headers: ${response.headers}');
@@ -24,16 +24,20 @@ class Api{
     }
 
   Future<dynamic> makePostRequest(String router, String body) async {
-      resultNotifier.value = RequestLoadInProgress();
-      final url = Uri.parse('$urlPrefix/$router');
-      final headers = {"Content-type": "application/json"};
-      //final json = '{"title": "Hello", "body": "body text", "userId": 1}';
-      final response = await post(url, headers: headers, body: body);
-      print('Status code: ${response.statusCode}');
-      print('Body: ${response.body}');
-      return _handleResponse(response);
-      //return response;
-    }
+    resultNotifier.value = RequestLoadInProgress();
+    final url = Uri.parse('$urlPrefix/$router');
+    final headers = {"Content-type": "application/json",
+      "Authorization": "bearer eyJ0eXAiOwiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5MTYzOThhNi0xMjA4LTQ0ODYtYTBjMC0xYTFlZwmJlZGNhMTUiLCJqdGkiOiJjMWE1MDZkMzZhYTc4YmE2NDM0NGY3NzNkYWMyNzIwMTAxNzBmZjdlNTVhZjFiZWZlZWRmZDM5NGRlZDlkYTQzNzVlMjE2ODFhM2I5ZjIzMiIsImlhdCI6MTU5OTY5MjkwMiwibmJmIjoxNTk5NjkyOTAyLCJleHAiOjE2MzEywMjg5MDIsInN1wYiI6IjQiLCJzY29wZXMiOltdfQ.rN1LkEKusr8hQEooQ4PnnTjyavAG0_4br9Ypg_M4aPJ5tuB_8wakeK1DiMHeieoefwWB52jzKsWndxJVd-w19Mj57-H4VymLMFhvj8nhlTBATfhYTc0UZmI0xOo0TFbE45gE-31UKcMCw9zVLqTTZXC2IpJNSdEVEyF2GxfwPPIQRFlOWAXaOemfmMhIuInhj4W8BKSonlGJNVqumV9mXWco6grzs8rBanuVL_phwNDbfEjockBt1HQrhCo-djfJOv66drwnzHt2L-e_PZ-9dWBiawn82VOJstWk-X-RgS1I0jPq-CSYqWvkGg2MFcmzoDoEqlGAyfsbrTJkOSOVf86leN12Lk25iCiqylY5h9dvHRLs3MvV0sUicJvcSWjFcm0QdHDlzvXxTCCcDiV_cakifksePEwY3WuFsRHLIXIM64bT2EuBmF61jQ8F2I1Sf6mxPCpn5VnKi8lB_kCmdjgBM9QTV5it2ABj_7chUq0NAYtPp2AvCEP7oucpHDqmP4sczMkdFnqbHrjZvjuvZCKzIGtQfuNtx2qoK7F5zLDjnyyLZQjBxEvOK4epCmn_HGom2gnMhxoHRTUWdiT8jcjpLEYmYCB9hO2yHdvMNytpKfaL6LE30xc-BaAbklg7Sc-gkBiVJOYHpwV7t4Freij1Rj4w-nR6NycFZ7MUf6D40rx4"};
+    //final json = '{"title": "Hello", "body": "body text", "userId": 1}';
+    final response = await post(url, headers: headers, body: body);
+    /*final response = await Future.wait([
+      post(url, headers: headers, body: body)
+    ]);*/
+    print('Status code: ${response.statusCode}');
+    print('Body: ${response.body}');
+    return _handleResponse(response);
+    //return response;
+  }
 
     Future<void> makePutRequest() async {
       resultNotifier.value = RequestLoadInProgress();

@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'dart:async';
 import 'package:face_net_authentication/pages/db/database.dart';
 import 'package:face_net_authentication/pages/models/user.model.dart';
 import 'package:face_net_authentication/pages/profile.dart';
@@ -7,7 +7,7 @@ import 'package:face_net_authentication/pages/widgets/app_button.dart';
 import 'package:face_net_authentication/services/camera.service.dart';
 import 'package:face_net_authentication/services/facenet.service.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
+import 'package:macadress_gen/macadress_gen.dart';
 import '../home.dart';
 import 'app_text_field.dart';
 
@@ -34,6 +34,8 @@ class _AuthActionButtonState extends State<AuthActionButton> {
       TextEditingController(text: '');
 
   User predictedUser;
+  MacadressGen macadressGen = MacadressGen();
+  String mac;
 
   Future _signUp(context) async {
     /// gets predicted data from facenet service (user face detected)
@@ -73,77 +75,90 @@ class _AuthActionButtonState extends State<AuthActionButton> {
     }*/
   }
 
-  Future<String> _predictUser() async{
-    String userAndPass = await _faceNetService.predict();
-    print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
-    print(userAndPass);
-    print('::::::::::::::::::::::::::::::::::::::::::::::::::::::::');
-    return userAndPass ?? null;
+  Future getMAc() async {
+    mac = await macadressGen.getMac();
+    print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+    print(mac);
+    print('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
   }
+  Timer _debounce;
 
   @override
   Widget build(BuildContext context){
-    return new FutureBuilder(
-      future: _faceNetService.predict(), // Chama a função de predição
-      initialData: null,
-      builder: (BuildContext context, AsyncSnapshot<String> user){
+    return FutureBuilder(
+        future: _faceNetService.predict(), // Chama a função de predição
+        initialData: null,
+        builder: (BuildContext context, AsyncSnapshot<User> user){
           return InkWell(
             onTap: () async {
               try {
+                this.predictedUser = null;
                 // Ensure that the camera is initialized.
                 await widget._initializeControllerFuture;
                 // onShot event (takes the image and predict output)
                 bool faceDetected = await widget.onPressed();
-print('CHEGUEI NO FACE DETECTED: ${faceDetected}');
+
                 if (faceDetected) { // Face detectada e botão clicado
                   if (widget.isLogin) { // Está logada
+// Checking if future is resolved
+                    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+                    print(user.connectionState);
+                    print('+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++');
+                    if (user.connectionState == ConnectionState.done) { // Espera finalizar
+                      if (user.hasData && !user.hasError) {
+                        if (user.data != null) {
+                          //await getMAc();
+                          //setState(() {});
+                          print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+                          print(user.data.user);
+                          print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 
-                    //var userAndPass = await _predictUser(); // Prever usuário
-                    print(
-                        ' -------------------- CHAMOU A FUNÇÃO _PREDICTUSER ----------------------------------');
-                    print('POSSUI ERRO NO FUTURE BUILDER?: ${user.hasError}');
-                    print('POSSUI DADOS NO FUTURE BUILDER?: ${user.hasData}');
-                    print('ESTADO DA REQUISIÇÃO: ${user.connectionState}');
-                    print(user.data);
-
-                    if (user.hasData) {
-                      if (user.data != "") {
-                        print(
-                            '<<<<<<<<<<<<<<<<<<< CHEGOU AQUI >>>>>>>>>>>>>>>>>>>');
-                        print(user.data);
-                        this.predictedUser = User.fromDB(user.data, '', []);
-                        print('USUARIO: ${this.predictedUser.user}');
-                        print('SENHA: ${this.predictedUser.password}');
+                          this.predictedUser = user.data;
+                          if(user.data.user == ""){
+                            print("Objeto vazio");
+                            this.predictedUser = null;
+                          }else{
+                            //_faceNetService.setPredictedData(null);
+                            this._faceNetService.clearPredictedData();
+                          }
+                        }
                       } else {
+                        // Não possui data
                         this.predictedUser = null;
+                        return CircularProgressIndicator();
                       }
-                    } else {
-                      // Não possui data
-                      this.predictedUser = null;
-                    }
 
-                    if (user.hasError) {
+                    }else{ // new test
                       this.predictedUser = null;
                     }
-                    print(
-                        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
-                    print(this.mounted);
-                    print(context);
-                    print(
-                        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
                   }
-                    //if(!this.mounted) return;
-                    //if(this.mounted) {
-                    //  setState(() {
-                    PersistentBottomSheetController bottomSheetController =
-                    Scaffold.of(context)
-                        .showBottomSheet((context) => signSheet(context));
+
+                  if (user.connectionState == ConnectionState.done) {
                     print(
-                        ' <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< PASSOU SCAFFOLD >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>');
-                    bottomSheetController.closed.whenComplete(() =>
-                        widget.reload());
-                    //  });
-                    //}
+                        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+                    print(this.predictedUser.user);
+                    print(
+                        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+                  }
+                  print('<><><><><><><><><><><><><><><><><><><>><><><>>><>><><>><><>');
+                  print('ANTES');
+                  print(ConnectionState.done);
+                  print('<><><><><><><><><><><><><><><><><><><>><><><>>><>><><>><><>');
+                  if (_debounce?.isActive ?? false) _debounce.cancel();
+                  _debounce = Timer(const Duration(milliseconds: 1000), () {
+
+                    print('<><><><><><><><><><><><><><><><><><><>><><><>>><>><><>><><>');
+                    print(ConnectionState.done);
+                    print('<><><><><><><><><><><><><><><><><><><>><><><>>><>><><>><><>');
+
+                  });
+
+                  PersistentBottomSheetController bottomSheetController =
+                  Scaffold.of(context)
+                      .showBottomSheet((context) => signSheet(context));
+
+                  bottomSheetController.closed.whenComplete(() =>
+                      widget.reload());
 
                 }
               } catch (e) {
@@ -185,7 +200,7 @@ print('CHEGUEI NO FACE DETECTED: ${faceDetected}');
               ),
             ),
           );
-      },
+        }
     );
   }
 
@@ -267,4 +282,10 @@ print('CHEGUEI NO FACE DETECTED: ${faceDetected}');
   void dispose() {
     super.dispose();
   }
+
+
+  Future<String> fetchData() => Future.delayed(Duration(seconds: 8), () {
+    print('Step 1, fetch data');
+    return "CONCLUIDO";
+  });
 }

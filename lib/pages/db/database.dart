@@ -35,8 +35,6 @@ class DataBaseService {
     String userAndPass = user + ':' + password;
     _db[userAndPass] = modelData;
     var body = '{"usuario": "${user}", "credencial": ${modelData}}';
-    print(body);
-    print('=====================================================');
     await api.makePostRequest('insertCredencial', body); // To save in MongoDB by NodeJs
     //jsonFile.writeAsStringSync(json.encode(_db));
   }

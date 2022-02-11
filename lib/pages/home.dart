@@ -53,10 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
     _setLoading(false);
   }
 
-  Future<Null> loadDB() async{
-    //await _dataBaseService.loadDB();
-  }
-
   // shows or hides the circular progress indicator
   _setLoading(bool value) {
     setState(() {
@@ -136,14 +132,16 @@ class _MyHomePageState extends State<MyHomePage> {
                     Column(
                       children: [
                         InkWell(
-                          onTap: () { // Chama função SIGN IN
-                            /*setState(() {
-                              loadDB();
-                            });*/
-                            loadDB();
+                          onTap: () async{ // Chama função SIGN IN
+
+                            print('---------------------------------------------------');
+                            print('I - FUNÇÃO SINGIN SENDO CHAMADO');
+                            print('---------------------------------------------------');
+//Navigator.pushReplacement(
+                            //await Navigator.push(
                             Navigator.push(
                               context,
-                              MaterialPageRoute(
+                              new MaterialPageRoute(
                                 builder: (BuildContext context) => SignIn(
                                   cameraDescription: cameraDescription,
                                 ),

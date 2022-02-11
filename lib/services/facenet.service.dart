@@ -7,6 +7,8 @@ import 'package:face_net_authentication/services/image_converter.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:image/image.dart' as imglib;
+import 'dart:convert';
+import 'package:face_net_authentication/pages/models/user.model.dart';
 
 class FaceNetService {
   // singleton boilerplate
@@ -74,15 +76,19 @@ class FaceNetService {
   }
 
   /// takes the predicted data previously saved and do inference
-  Future<String> predict() async{
-    print("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
-    print(await _searchResult(this._predictedData));
-    print("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§");
+  Future<User> predict() async{
     var search = await _searchResult(this._predictedData);
+    //this._predictedData.clear();
+    /// search closer user prediction if exists
+    return search;
+  }
 
+  /// takes the predicted data previously saved and do inference
+  /*Future<String> predict() async{
+    var search = await _searchResult(this._predictedData);
     /// search closer user prediction if exists
     return search.toString();
-  }
+  }*/
 
   /// _preProess: crops the image to be more easy
   /// to detect and transforms it to model input.
@@ -141,23 +147,29 @@ class FaceNetService {
 
   /// searchs the result in the DDBB (this function should be performed by Backend)
   /// [predictedData]: Array that represents the face by the MobileFaceNet model
-  Future<String> _searchResult(List predictedData) async{
-
-    var result = await _dataBaseService.valideLogin(predictedData) ;
-    print('****************** Função SEARCH RESULT *****************');
-    print(result);
-    print(result[0]['USUARIO']);
-    print('*********************************************************');
-    return result[0]['USUARIO'];
+  dynamic _searchResult(List predictedData){
+    return _dataBaseService.valideLogin(predictedData).then((value) {
+      return User.fromDB(value[0]['USUARIO'], '', []);
+    }
+    );
+    //return result[0]['USUARIO'];
+    //return User.fromJson(result[0]);
+    //return User.fromDB(result[0]['USUARIO'], '', []);
   }
 
-  Future<Null> returnResult() async{
-    Map<String, dynamic> result = await _dataBaseService.valideLogin(predictedData);
-    return result['USUARIO'];
-  }
+  /*Future<User> _searchResult(List predictedData) async{
+    var result = await _dataBaseService.valideLogin(predictedData);
+    //return result[0]['USUARIO'];
+    //return User.fromJson(result[0]);
+    return User.fromDB(result[0]['USUARIO'], '', []);
+  }*/
 
   void setPredictedData(value) {
     this._predictedData = value;
+  }
+
+  void clearPredictedData(){
+    this._predictedData.clear();
   }
 
 }
